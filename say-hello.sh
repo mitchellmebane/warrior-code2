@@ -1,7 +1,9 @@
 #!/bin/bash
 
 tput civis
-stty -echo
+if [[ -t 1 ]]; then
+  stty -echo
+fi
 
 # On VirtualBox we have port forwarding from localhost on the host,
 # but VMware doesn't do that.
@@ -20,7 +22,9 @@ then
 else
   echo "  Point your web browser to http://${IP_ADDRESS}:8001/ to manage your warrior."
   bytes=$(( 640 * 355 * 4 ))
-  sudo sh -c "cat at-splash-640x400-32.fb | head -c $bytes > /dev/fb0"
+  if [ -z "$DOCKER" ]; then
+    sudo sh -c "cat at-splash-640x400-32.fb | head -c $bytes > /dev/fb0"
+  fi
 fi
 
 echo -ne "\033[0;00;00m"
